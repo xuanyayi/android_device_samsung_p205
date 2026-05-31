@@ -1,2 +1,10 @@
 soong_namespace {
 }
+
+vintf_compatibility_matrix {
+    name: "framework_compatibility_matrix.p205_kernel_2.xml",
+    stem: "compatibility_matrix.2.xml",
+    srcs: [
+        "configs/compatibility_matrix.2.xml",
+    ],
+}

@@ -14,7 +14,7 @@ fi
 
 set -e
 
-export DEVICE=wisdom
+export DEVICE=p205
 export DEVICE_COMMON=universal7904-common
 export VENDOR=samsung
 
