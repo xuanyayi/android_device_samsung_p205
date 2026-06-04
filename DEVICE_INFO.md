@@ -26,9 +26,9 @@ affect framework, partition, or HAL behavior.
   defaulting to `P205DXU6CVG2` until a dump from the exact target tablet is
   provided and recorded here.
 - Kernel/dtbo currently staged in this tree:
-  - `device/samsung/p205/prebuilt/Image`
-  - `device/samsung/p205/prebuilt/recovery_dtbo`
-  - `device/samsung/p205/prebuilt/vbmeta.img`
+  - `device/samsung/wisdom/prebuilt/Image`
+  - `device/samsung/wisdom/prebuilt/recovery_dtbo`
+  - `device/samsung/wisdom/prebuilt/vbmeta.img`
   `BoardConfig.mk` deliberately forces the prebuilt kernel and prebuilt dtbo
   for rescue builds while userspace boot blockers are being removed. These
   files must be replaced together from the same selected stock baseline; do not

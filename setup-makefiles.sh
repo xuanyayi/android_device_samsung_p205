@@ -9,7 +9,7 @@
 set -e
 
 # Required!
-export DEVICE=p205
+export DEVICE=wisdom
 export DEVICE_COMMON=universal7904-common
 export VENDOR=samsung
 

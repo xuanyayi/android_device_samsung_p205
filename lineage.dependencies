@@ -6,6 +6,6 @@
     },
     {
         "repository": "proprietary_vendor_samsung_wisdom",
-        "target_path": "vendor/samsung/p205"
+        "target_path": "vendor/samsung/wisdom"
     }
 ]

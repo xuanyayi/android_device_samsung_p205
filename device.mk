@@ -17,13 +17,13 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 # Inherit common device configuration
 $(call inherit-product, device/samsung/universal7904-common/universal7904-common.mk)
 
-$(call inherit-product, vendor/samsung/p205/p205-vendor.mk)
+$(call inherit-product, vendor/samsung/wisdom/wisdom-vendor.mk)
 
 # Samsung's RIL and carrier-feature blobs look up OMC data under /product/omc
 # for CSC/network policy, including legacy CS fallback behavior. The OMC
 # cscfeature XML files are Samsung-encoded, so they are installed as prebuilt
 # modules instead of PRODUCT_COPY_FILES to avoid host xmllint validation.
-include vendor/samsung/p205/omc-packages.mk
+include vendor/samsung/wisdom/omc-packages.mk
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.omc.build.version=P205OLM6CWA2 \
@@ -49,11 +49,7 @@ PRODUCT_PACKAGES += \
     vendor.samsung.hardware.camera.provider@4.0.vendor
 
 PRODUCT_COPY_FILES += \
-    vendor/samsung/p205/proprietary/vendor/etc/permissions/android.hardware.camera.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.xml
-
-# Telephony
-PRODUCT_PACKAGES += \
-    Dialer
+    vendor/samsung/wisdom/proprietary/vendor/etc/permissions/android.hardware.camera.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.xml
 
 PRODUCT_VENDOR_PROPERTIES += \
     ro.vendor.multisim.simslotcount=1 \

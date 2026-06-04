@@ -27,4 +27,7 @@
         <item>"1,1"</item>
         <item>"0,1"</item>
     </string-array>
+
+    <!-- Keep fewer cached apps resident on the 3GB RAM SM-P205. -->
+    <integer name="config_customizedMaxCachedProcesses">24</integer>
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="configs_device">
+        <!-- Reclaim memory from cached apps before the 3GB RAM device reaches hard pressure. -->
+        <item>activity_manager/max_cached_processes=24</item>
+        <item>activity_manager/use_compaction=true</item>
+    </string-array>
+</resources>

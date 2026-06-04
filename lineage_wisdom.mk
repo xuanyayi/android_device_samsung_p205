@@ -18,24 +18,31 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/media_product.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/non_ab_device.mk)
 
 # Inherit device configuration
-$(call inherit-product, device/samsung/p205/device.mk)
+$(call inherit-product, device/samsung/wisdom/device.mk)
 
 # Keep a camera frontend installed even though this target uses the mini tablet
 # package set to fit the real SM-P205 product partition.
 PRODUCT_PACKAGES += \
     Aperture
 
+# Restore the standard Android language set; this target does not inherit
+# full_base.mk because the product partition is small.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+
+# This unofficial build does not provide OTA updates; keep the updater service
+# out of RAM on the 3GB device.
+TARGET_DISABLE_LINEAGE_UPDATER := true
+
 ## Inherit common Lineage tablet stuff without the full optional app suite.
 $(call inherit-product, vendor/lineage/config/common_mini_tablet.mk)
 
-# Restrict available locales to English (US) and Simplified Chinese (China)
-PRODUCT_LOCALES := en_US zh_CN
-LINEAGE_SKIP_CUSTOM_LOCALES := true
+# Keep Settings search available while staying on the mini package set.
+PRODUCT_PACKAGES += \
+    SettingsIntelligence
 
-# Device identifier. wisdom and p205 are the same SM-P205 target in this tree.
-# Keep PRODUCT_DEVICE on p205 so Android uses the existing device tree, while
-# PRODUCT_NAME provides the canonical Lineage target name.
-PRODUCT_DEVICE := p205
+# Device identifier. wisdom is the canonical local device path and product
+# device name; p205 remains only as the hardware/model alias for SM-P205.
+PRODUCT_DEVICE := wisdom
 PRODUCT_NAME := lineage_wisdom
 PRODUCT_MODEL := SM-P205
 PRODUCT_BRAND := samsung
