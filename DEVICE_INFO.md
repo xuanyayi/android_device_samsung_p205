@@ -33,6 +33,8 @@ affect framework, partition, or HAL behavior.
   for rescue builds while userspace boot blockers are being removed. These
   files must be replaced together from the same selected stock baseline; do not
   mix a recovery dtbo with blobs or firmware from another build.
+- Recovery in this device tree is Lineage Recovery. Standalone third-party
+  recovery experiments are not the design baseline for `lineage_wisdom` bring-up.
 - Long-term source-kernel bring-up should keep `wisdom_defconfig`, add/validate
   p205 DTS entries and matching `BOARD_DTB_CFG`/`BOARD_DTBO_CFG`, then unset
   `TARGET_FORCE_PREBUILT_KERNEL`.
@@ -73,6 +75,9 @@ fingerprint and partition image hashes.
 ## Features
 
 - LTE single-SIM tablet: expose one radio slot in VINTF and one default network entry.
+  Keep the default preferred network mode at `LTE/GSM/WCDMA` (`9`) so data can
+  register on LTE. Until VoLTE is validated, normal calls use the non-IMS CS
+  voice path and request GSM/WCDMA during dialing.
 - Wi-Fi 802.11 a/b/g/n/ac, Bluetooth 5.0, GPS/GLONASS/BDS/Galileo.
 - Cameras: 8 MP rear, 5 MP front.
 - Sensors publicly listed across sources: accelerometer, ambient light, hall,
@@ -81,9 +86,72 @@ fingerprint and partition image hashes.
 - S Pen / Wacom input is device-defining; do not remove input support while pruning.
 - NFC is not part of the SM-P205 public spec and there is no `nfc` partition/HAL in the current bring-up.
 
+## Samsung Feature Porting Notes
+
+The SM-P205 Android 11 user manual lists Samsung features such as S Pen/Air
+command, Smart select, Screen write, Live messages, Air view, Screen off memo,
+Face recognition, Palm swipe to capture, Daily Board, Dolby Atmos, Eye comfort
+shield, Secure Folder, and Samsung Kids. Do not treat this list as a mandate to
+ship closed Samsung applications or Knox services in LineageOS.
+
+- Supported through AOSP/Lineage plumbing in this tree:
+  - S Pen input and hover are handled by the Wacom `sec_e-pen` input device,
+    `sec_e-pen.idc`, and framework/inputflinger stylus handling.
+  - Double-tap-to-wake uses the framework `DOUBLE_TAP_TO_WAKE` setting through
+    the Power HAL to the Samsung `aot_enable` touchscreen command.
+  - Adaptive brightness uses the Samsung light sensor through standard Android
+    auto-brightness resources.
+  - Eye comfort shield maps to AOSP Night Display. The device overlay enables
+    accelerated color transforms and defaults Night Display to a 22:00-06:00
+    custom schedule.
+  - Flip cover sleep/wake maps the Hall sensor to Android's standard lid switch
+    handling. FlipFlap is installed with the device overlay set to the full-screen
+    cover style so closing the cover can present a Lineage clock/notification
+    surface instead of only blanking the display.
+  - Dolby Atmos has the Samsung `libswdap` DAP effect registered against the
+    stock blob descriptor UUID. Keep the Lineage Dolby UI disabled until the
+    effect parameters and `dax-default.xml` behavior are validated on hardware.
+  - Palm swipe to capture is approximated with a framework-level multi-finger
+    horizontal gesture that calls Android's screenshot service. The gesture
+    thresholds still need runtime validation on the tablet.
+  - Screen write is approximated by routing screenshot edit actions to Gallery2
+    FilterShow. This gives users an immediate post-screenshot editor without
+    shipping Samsung Air command.
+  - Multi window and Pop-up view map to Android split-screen and freeform window
+    management. The device declares `android.software.freeform_window_management`
+    and allows non-resizable activities in multi-window modes to better match the
+    stock Samsung tablet behavior.
+  - The tablet taskbar is handled by Lineage/Trebuchet's large-screen taskbar,
+    which is enabled by default for tablet layouts and provides a practical
+    launcher/task-switching entry point for split-screen workflows.
+  - Smart View / wireless display maps to Android Wi-Fi Display / Miracast. The
+    common framework overlay enables `config_enableWifiDisplay`; the build ships
+    Wi-Fi Direct permissions, `wifi.direct.interface=p2p0`, remote-submix audio
+    HAL/policy, and the Exynos `video/avc-wfd` encoder. Runtime validation still
+    needs a Miracast sink to confirm discovery, connection, audio, latency, and
+    protected-video behavior.
+  - Daily Board is approximated with Android's screensaver/Dream framework.
+    `PhotoTable` is installed and the default dream is the photo-frame mode,
+    activated when the tablet sleeps while charging.
+- Not implemented by the current AOSP/Lineage feature set:
+  - Smart select is intentionally not exposed. The selected-region screenshot
+    approximation is not useful enough on this device.
+  - Screen off memo is not just generic stylus input. Android 13 in this tree
+    does not provide the Android 14 notes role / note-taking intent flow, and
+    there is no bundled Samsung Notes-compatible app. A correct implementation
+    would need a dedicated lockscreen/offscreen note app plus an explicit S Pen
+    removal or button-triggered wake/launch path.
+- Do not advertise without a real HAL/service stack:
+  - Face recognition requires a working Android face biometrics HAL and enrolled
+    template storage; the front camera alone is not sufficient.
+  - Secure Folder depends on Samsung Knox/container services.
+  - Samsung Kids, PENUP, Samsung Notes, Live messages, and Air command are
+    Samsung application/framework features rather than generic hardware
+    capabilities.
+
 ## Verified Partition Layout
 
-Captured from TWRP on the target device:
+Captured from the target SM-P205:
 
 ```text
 boot      mmcblk0p15   32768 KiB

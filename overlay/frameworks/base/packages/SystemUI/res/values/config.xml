@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Use Gallery2 FilterShow as the screenshot editor for Screen write approximation. -->
+    <string name="config_screenshotEditor" translatable="false">com.android.gallery3d/com.android.gallery3d.filtershow.FilterShowActivity</string>
+</resources>

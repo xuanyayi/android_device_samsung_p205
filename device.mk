@@ -1,5 +1,7 @@
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
+LINEAGE_SKIP_CUSTOM_LOCALES := true
+
 PRODUCT_SHIPPING_API_LEVEL := 28
 PRODUCT_USE_DYNAMIC_PARTITIONS := false
 
@@ -13,6 +15,11 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.service.debuggable=1 \
     persist.logd.size=8M \
     ro.logd.size=8M
+
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.recovery.usb.vid=04E8 \
+    ro.recovery.usb.adb.pid=685D \
+    ro.recovery.usb.fastboot.pid=685D
 
 # Inherit common device configuration
 $(call inherit-product, device/samsung/universal7904-common/universal7904-common.mk)
@@ -74,6 +81,7 @@ PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)
 # Navigation bar mode overlays. The 2-button overlay is inherited from the
 # common Lineage tablet config and is harmless to keep for now.
 PRODUCT_PACKAGES += \
+    Dialer \
     NavigationBarMode3ButtonOverlay \
     NavigationBarModeGesturalOverlay \
     framework_compatibility_matrix.p205_kernel_2.xml

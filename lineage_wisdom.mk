@@ -23,7 +23,11 @@ $(call inherit-product, device/samsung/wisdom/device.mk)
 # Keep a camera frontend installed even though this target uses the mini tablet
 # package set to fit the real SM-P205 product partition.
 PRODUCT_PACKAGES += \
-    Aperture
+    Aperture \
+    FlipFlap \
+    FlipFlapOverlay \
+    Gallery2 \
+    PhotoTable
 
 # Restore the standard Android language set; this target does not inherit
 # full_base.mk because the product partition is small.

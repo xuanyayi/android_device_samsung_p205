@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+
+    <!-- Hide the partial screenshot toggle on SM-P205. -->
+    <bool name="config_showClickPartialScreenshot">false</bool>
+
+</resources>

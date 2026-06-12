@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The SM-P205 Hall sensor reports the flip-cover state through the
+         standard lid switch. Use FlipFlap's full-screen cover mode because the
+         tablet cover does not expose a small dot/circle/rectangular window. -->
+    <integer name="config_deviceCoverType">4</integer>
+</resources>
