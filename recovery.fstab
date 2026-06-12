@@ -1,0 +1,15 @@
+# Android recovery fstab for SM-P205.
+#<src>                                                  <mnt_point>         <type>  <mnt_flags and options>                                                   <fs_mgr_flags>
+/dev/block/platform/13500000.dwmmc0/by-name/boot       /boot               emmc    defaults                                                                  recoveryonly
+/dev/block/platform/13500000.dwmmc0/by-name/recovery   /recovery           emmc    defaults                                                                  recoveryonly
+/dev/block/platform/13500000.dwmmc0/by-name/system     /system_root        ext4    ro,noatime                                                                wait
+/dev/block/platform/13500000.dwmmc0/by-name/vendor     /vendor             ext4    ro,noatime                                                                wait
+/dev/block/platform/13500000.dwmmc0/by-name/product    /product            ext4    ro,noatime                                                                wait,nofail
+/dev/block/platform/13500000.dwmmc0/by-name/cache      /cache              ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic    wait,check
+/dev/block/platform/13500000.dwmmc0/by-name/omr        /metadata           ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic    wait,formattable,check
+/dev/block/platform/13500000.dwmmc0/by-name/omr        /omr                ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic    wait,check
+/dev/block/platform/13500000.dwmmc0/by-name/userdata   /data               ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic    wait,check,formattable,fileencryption=aes-256-xts:aes-256-cts:v1,reservedsize=128M,quota
+/dev/block/platform/13500000.dwmmc0/by-name/efs        /efs                ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic    wait,check
+/dev/block/platform/13500000.dwmmc0/by-name/misc       /misc               emmc    defaults                                                                  defaults
+/devices/platform/13550000.dwmmc2/mmc_host/mmc1*       auto                auto    defaults                                                                  voldmanaged=sdcard:auto
+/devices/platform/13600000.usb/13600000.dwc3*          auto                auto    defaults                                                                  voldmanaged=usb:auto

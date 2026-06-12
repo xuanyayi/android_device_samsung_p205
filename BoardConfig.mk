@@ -6,15 +6,16 @@ TARGET_OTA_ASSERT_DEVICE := p205,wisdom,wisdomx
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image
 TARGET_FORCE_PREBUILT_KERNEL := true
 TARGET_KERNEL_CONFIG := wisdom_defconfig
-BOARD_CUSTOM_BOOTIMG_MK := hardware/samsung/mkbootimg.mk
+BOARD_CUSTOM_BOOTIMG_MK := $(DEVICE_PATH)/p205_bootimg.mk
 TARGET_CUSTOM_DTBTOOL := dtbhtoolExynos
 BOARD_BOOT_HEADER_VERSION := 1
+BOARD_KERNEL_CMDLINE := androidboot.hardware=exynos7904
 
 # Keep the known-booting 4.4.177 p205 kernel until the 4.4.302 source kernel
 # is boot-stable on this tablet.
 
-# Use the booting SM-P205 TWRP DTBO as a base until the source kernel is
-# stable, but keep its speaker route aligned with the runtime
+# Use the known-booting SM-P205 recovery DTBO as a base until the source kernel
+# is stable, but keep its speaker route aligned with the runtime
 # `tfa98xx-aif-9-34` widget rather than the broken `8-34` route in the stock
 # blob.
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/recovery_dtbo
@@ -25,11 +26,20 @@ BOARD_ROOT_EXTRA_SYMLINKS := \
     /mnt/vendor/efs:/factory
 
 # Recovery
+# This device tree targets Lineage Recovery. Do not carry alternate recovery
+# product inheritance or feature flags here.
+BOARD_PREBUILT_RECOVERYIMAGE := $(DEVICE_PATH)/prebuilt/recovery.img
 BOARD_INCLUDE_RECOVERY_DTBO := true
 BOARD_USES_FULL_RECOVERY_IMAGE := true
 BOOTLOADER_MESSAGE_OFFSET := 2048
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.exynos7904
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 TARGET_RECOVERY_PIXEL_FORMAT := "ABGR_8888"
+BOARD_RECOVERY_IMAGE_PREPARE += \
+    grep -q '^ro.adb.secure.recovery=' $(TARGET_RECOVERY_ROOT_OUT)/prop.default || echo 'ro.adb.secure.recovery=0' >> $(TARGET_RECOVERY_ROOT_OUT)/prop.default; \
+    grep -q '^service.adb.root=' $(TARGET_RECOVERY_ROOT_OUT)/prop.default || echo 'service.adb.root=1' >> $(TARGET_RECOVERY_ROOT_OUT)/prop.default;
+
+# Prebuilt Recovery Kernel
+TARGET_PREBUILT_RECOVERY_KERNEL := $(DEVICE_PATH)/prebuilt/recovery_Image
 
 # Sepolicy
 BOARD_SEPOLICY_TEE_FLAVOR := mobicore
@@ -39,6 +49,14 @@ VENDOR_SECURITY_PATCH := 2023-02-01
 
 # Inherit common board flags
 include device/samsung/universal7904-common/BoardConfigCommon.mk
+
+# Keep recovery image headers aligned with the SM-P205 recovery image that the
+# bootloader accepts. The common board config sets generic mkbootimg offsets and
+# the platform build injects Android 13 / current SPL version fields before
+# these args. Match TWRP's deliberately high header version fields so Samsung's
+# rollback gate does not reject Lineage Recovery after TWRP has booted.
+BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --second_offset 0x00f00000 --set_empty_second_addr --tags_offset 0x00000100 --header_version 1 --board SRPSA16A009RU --os_version 12.0.0 --os_patch_level 2099-12
+BOARD_RECOVERY_MKBOOTIMG_ARGS := $(BOARD_MKBOOTIMG_ARGS)
 
 # p205-specific partition sizes. Keep these after common BoardConfig so the
 # shared wisdom defaults do not override the real SM-P205 layout.
