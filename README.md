@@ -29,10 +29,23 @@ mka bacon -j"$(nproc --all)"
 
 ## Recovery
 
-This device tree uses a prebuilt recovery image. The `recoveryimage` target
-copies `device/samsung/wisdom/prebuilt/recovery.img` to
-`out/target/product/wisdom/recovery.img` instead of rebuilding recovery from
-source.
+This device tree uses a validated prebuilt Lineage Recovery image. The
+`recoveryimage` target copies `device/samsung/wisdom/prebuilt/recovery.img` to
+`out/target/product/wisdom/recovery.img` instead of rebuilding recovery during a
+normal ROM build.
+
+The source and rebuild recipe for this recovery image live in:
+
+```text
+https://github.com/xuanyayi/p205-lineage-recovery
+```
+
+When synced through `android_manifest_samsung_wisdom`, the recovery source is
+checked out at:
+
+```text
+recovery/samsung/p205_lineage_recovery
+```
 
 To verify the recovery output:
 
@@ -40,3 +53,8 @@ To verify the recovery output:
 mka recoveryimage -j"$(nproc --all)"
 cmp device/samsung/wisdom/prebuilt/recovery.img out/target/product/wisdom/recovery.img
 ```
+
+To rebuild the recovery image itself, follow the README in
+`recovery/samsung/p205_lineage_recovery`, then replace
+`device/samsung/wisdom/prebuilt/recovery.img` only after validating the new
+image size, boot behavior, and SHA-256.
