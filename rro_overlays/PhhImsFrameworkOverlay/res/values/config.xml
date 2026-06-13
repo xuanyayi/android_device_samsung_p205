@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Experimental userspace IMS bring-up with packages/apps/PhhIms. -->
+    <bool name="config_carrier_volte_available">true</bool>
+    <bool name="config_device_volte_available">true</bool>
+    <bool name="config_device_vt_available">false</bool>
+    <string name="config_wlan_data_service_package" translatable="false">com.google.android.iwlan</string>
+    <string name="config_wlan_network_service_package" translatable="false">com.google.android.iwlan</string>
+</resources>

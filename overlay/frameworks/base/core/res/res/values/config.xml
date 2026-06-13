@@ -55,4 +55,5 @@
     <!-- Approximate Samsung Daily Board with Android's charging photo-frame dream. -->
     <bool name="config_dreamsActivatedOnSleepByDefault">true</bool>
     <string name="config_dreamsDefaultComponent" translatable="false">com.android.dreams.phototable/com.android.dreams.phototable.FlipperDream</string>
+
 </resources>

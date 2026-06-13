@@ -84,4 +84,5 @@ PRODUCT_PACKAGES += \
     Dialer \
     NavigationBarMode3ButtonOverlay \
     NavigationBarModeGesturalOverlay \
+    PhhImsFrameworkOverlay \
     framework_compatibility_matrix.p205_kernel_2.xml
