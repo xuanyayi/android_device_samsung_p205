@@ -30,7 +30,7 @@ on post-fs-data
     chmod 0600 /mnt/vendor/efs/factory.prop
 
 # Modem boot daemon
-service cpboot-daemon /vendor/bin/cbd -d -tss310 -bm -mm -P platform/13500000.dwmmc0/by-name/radio -n /mnt/vendor/efs
+service vendor.cpboot-daemon /vendor/bin/cbd -d -tss310 -bm -mm -P platform/13500000.dwmmc0/by-name/radio -n /mnt/vendor/efs
     class main
     user root
     group radio cache inet misc audio sdcard_rw log sdcard_r shell system
@@ -41,11 +41,11 @@ on boot
     # mode even if secril_config_svc fails to publish ro.vendor.multisim.*.
     setprop persist.radio.multisim.config ss
 
-on property:init.svc.cpboot-daemon=running
+on property:init.svc.vendor.cpboot-daemon=running
     write /sys/module/modem_ctrl_ss310ap/parameters/ds_detect 1
 
-on property:init.svc.ril-daemon1=running
-    stop ril-daemon1
+on property:init.svc.vendor.ril-daemon1=running
+    stop vendor.ril-daemon1
 
 on property:ril.clatd.v4-rmnet0=up
     write /sys/class/net/rmnet0/queues/rx-0/rps_cpus 4

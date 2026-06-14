@@ -14,7 +14,13 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.service.adb.enable=1 \
     persist.service.debuggable=1 \
     persist.logd.size=8M \
-    ro.logd.size=8M
+    ro.logd.size=8M \
+    persist.bluetooth.enablenewavrcp=false \
+    ro.fastbootd.available=true \
+    ro.product_ship=true \
+    ro.recovery.usb.vid=04E8 \
+    ro.recovery.usb.adb.pid=685D \
+    ro.recovery.usb.fastboot.pid=685D
 
 PRODUCT_VENDOR_PROPERTIES += \
     ro.recovery.usb.vid=04E8 \
