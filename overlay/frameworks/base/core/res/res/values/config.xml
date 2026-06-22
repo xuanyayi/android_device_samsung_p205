@@ -45,6 +45,9 @@
     <!-- The Samsung flip-cover Hall sensor is wired as the standard lid switch. -->
     <bool name="config_lidControlsSleep">true</bool>
 
+    <!-- The COD3035 jack driver reports headset state through /dev/input switches. -->
+    <bool name="config_useDevInputEventForAudioJack">true</bool>
+
     <!-- Approximate Samsung palm swipe capture through Android's screenshot service. -->
     <bool name="config_enablePalmSwipeScreenshot">true</bool>
 
