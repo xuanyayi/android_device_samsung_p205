@@ -1,26 +1,24 @@
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
+# Basic hardware bring-up defaults. This must be set before inheriting the
+# common/vendor products because they gate camera packages on this variable.
+TARGET_ENABLE_CAMERA_BRINGUP ?= true
+
 LINEAGE_SKIP_CUSTOM_LOCALES := true
 
 PRODUCT_SHIPPING_API_LEVEL := 28
 PRODUCT_USE_DYNAMIC_PARTITIONS := false
 
-# Bring-up diagnostics. Keep USB adb enabled by default and keep enough log
-# buffer to diagnose black-screen boots from recovery/pstore. For rescue builds
-# that need insecure adb, use WITH_ADB_INSECURE=true instead of overriding
-# ro.adb.secure in the product properties.
+# Release diagnostics. Keep larger log buffers for field debugging, but do not
+# force insecure or always-on ADB in normal Android. Lineage common properties
+# keep ADB authentication enabled for non-eng builds, and users can opt in from
+# Developer options when they need host debugging.
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    persist.sys.usb.config=mtp,adb \
-    persist.service.adb.enable=1 \
-    persist.service.debuggable=1 \
     persist.logd.size=8M \
     ro.logd.size=8M \
     persist.bluetooth.enablenewavrcp=false \
     ro.fastbootd.available=true \
-    ro.product_ship=true \
-    ro.recovery.usb.vid=04E8 \
-    ro.recovery.usb.adb.pid=685D \
-    ro.recovery.usb.fastboot.pid=685D
+    ro.product_ship=true
 
 PRODUCT_VENDOR_PROPERTIES += \
     ro.recovery.usb.vid=04E8 \
@@ -46,7 +44,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
     ro.omc.disabler=FALSE
 
 # P205 stock camera provider uses Samsung's prebuilt camera.device/provider
-# legacy implementations. Do not install the AOSP stubs with the same stems.
+# legacy implementations. Do not install AOSP stubs with the same stems.
 PRODUCT_PACKAGES := $(filter-out \
     android.hardware.camera.provider@2.4-legacy \
     android.hardware.camera.provider@2.5-legacy \
@@ -57,12 +55,13 @@ PRODUCT_PACKAGES := $(filter-out \
     camera.device@3.5-impl, \
     $(PRODUCT_PACKAGES))
 
-# Camera
-PRODUCT_PACKAGES += \
-    vendor.samsung.hardware.camera.provider@4.0.vendor
-
-PRODUCT_COPY_FILES += \
-    vendor/samsung/wisdom/proprietary/vendor/etc/permissions/android.hardware.camera.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.xml
+# Bootable bring-up: use the generated Samsung radio HIDL interface libraries
+# that Lineage-side RIL helpers link against, and avoid installing proprietary
+# prebuilts with the same vendor/lib stems.
+PRODUCT_PACKAGES := $(filter-out \
+    vendor.samsung.hardware.radio@2.0-vendorblob \
+    vendor.samsung.hardware.radio@2.1-vendorblob, \
+    $(PRODUCT_PACKAGES))
 
 PRODUCT_VENDOR_PROPERTIES += \
     ro.vendor.multisim.simslotcount=1 \

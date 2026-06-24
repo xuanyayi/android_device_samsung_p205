@@ -1,5 +1,4 @@
 <manifest version="1.0" type="device">
-    <kernel target-level="2"/>
     <hal format="hidl">
         <name>android.hardware.keymaster</name>
         <transport>hwbinder</transport>

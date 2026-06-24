@@ -44,6 +44,9 @@ on boot
 on property:init.svc.vendor.cpboot-daemon=running
     write /sys/module/modem_ctrl_ss310ap/parameters/ds_detect 1
 
+on property:vendor.cbd.boot_done=1
+    start ril-daemon
+
 on property:init.svc.vendor.ril-daemon1=running
     stop vendor.ril-daemon1
 

@@ -1,6 +1,7 @@
 # Android recovery fstab for SM-P205.
 #<src>                                                  <mnt_point>         <type>  <mnt_flags and options>                                                   <fs_mgr_flags>
 /dev/block/platform/13500000.dwmmc0/by-name/boot       /boot               emmc    defaults                                                                  recoveryonly
+/dev/block/platform/13500000.dwmmc0/by-name/dtbo       /dtbo               emmc    defaults                                                                  recoveryonly
 /dev/block/platform/13500000.dwmmc0/by-name/recovery   /recovery           emmc    defaults                                                                  recoveryonly
 /dev/block/platform/13500000.dwmmc0/by-name/system     /system             ext4    ro,noatime                                                                wait
 /dev/block/platform/13500000.dwmmc0/by-name/vendor     /vendor             ext4    ro,noatime                                                                wait

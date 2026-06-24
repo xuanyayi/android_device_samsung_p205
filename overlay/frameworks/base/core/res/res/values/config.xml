@@ -51,8 +51,8 @@
     <!-- Approximate Samsung palm swipe capture through Android's screenshot service. -->
     <bool name="config_enablePalmSwipeScreenshot">true</bool>
 
-    <!-- Approximate Samsung Multi window / Pop-up view with Android freeform windows. -->
-    <bool name="config_freeformWindowManagement">true</bool>
+    <!-- Keep freeform windows off by default; this 3GB tablet is smoother fullscreen. -->
+    <bool name="config_freeformWindowManagement">false</bool>
     <integer name="config_supportsNonResizableMultiWindow">1</integer>
 
     <!-- Approximate Samsung Daily Board with Android's charging photo-frame dream. -->

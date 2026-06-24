@@ -55,9 +55,13 @@ require_file "$overlay_xml"
 require_grep '<bool name="config_useDevInputEventForAudioJack">true</bool>' "$overlay_xml"
 pass "3.5mm jack input-event framework overlay is enabled"
 
-require_file "$target_files_dir/VENDOR/overlay/framework-res__auto_generated_rro_vendor.apk"
+framework_rro="$(find "$target_files_dir/VENDOR/overlay" \
+    -maxdepth 1 -type f -name 'framework-res*auto_generated_rro_vendor.apk' \
+    -print -quit)"
+[[ -n "$framework_rro" ]] || fail "framework-res vendor RRO not found in $target_files_dir/VENDOR/overlay"
+
 require_apk_bool_true \
-    "$target_files_dir/VENDOR/overlay/framework-res__auto_generated_rro_vendor.apk" \
+    "$framework_rro" \
     config_useDevInputEventForAudioJack
 pass "target_files vendor framework overlay carries input-event jack support"
 

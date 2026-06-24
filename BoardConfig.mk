@@ -1,6 +1,15 @@
 DEVICE_PATH := device/samsung/wisdom
 
+# Basic hardware bring-up defaults. Keep this overridable for rescue builds
+# that need the old no-camera package shape.
+TARGET_ENABLE_CAMERA_BRINGUP ?= true
+
 TARGET_OTA_ASSERT_DEVICE := p205,wisdom,wisdomx
+
+# SM-P205 uses a non-A/B partition layout. Keep OTA packaging on the
+# non-A/B updater path so target-files does not require META/ab_partitions.txt.
+AB_OTA_UPDATER := false
+TARGET_RELEASETOOLS_EXTENSIONS := $(DEVICE_PATH)
 
 # Kernel
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image
@@ -10,7 +19,7 @@ BOARD_CUSTOM_BOOTIMG := true
 BOARD_CUSTOM_BOOTIMG_MK := $(DEVICE_PATH)/p205_bootimg.mk
 TARGET_CUSTOM_DTBTOOL := dtbhtoolExynos
 BOARD_BOOT_HEADER_VERSION := 1
-BOARD_KERNEL_CMDLINE := androidboot.hardware=exynos7904
+BOARD_KERNEL_CMDLINE := androidboot.hardware=exynos7904 androidboot.selinux=permissive firmware_class.path=/vendor/firmware
 
 # Keep the known-booting 4.4.177 p205 kernel until the 4.4.302 source kernel
 # is boot-stable on this tablet.
@@ -27,14 +36,14 @@ BOARD_ROOT_EXTRA_SYMLINKS := \
     /mnt/vendor/efs:/factory
 
 # Recovery
-# This device tree targets Lineage Recovery. Do not carry alternate recovery
-# product inheritance or feature flags here.
+# This device tree packages a validated prebuilt TWRP 12.1 recovery image for
+# SM-P205, instead of rebuilding recovery from the LineageOS source tree.
 BOARD_PREBUILT_RECOVERYIMAGE := $(DEVICE_PATH)/prebuilt/recovery.img
 BOARD_INCLUDE_RECOVERY_DTBO := true
 BOARD_USES_FULL_RECOVERY_IMAGE := true
 BOOTLOADER_MESSAGE_OFFSET := 2048
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
-TARGET_RECOVERY_PIXEL_FORMAT := "ABGR_8888"
+TARGET_RECOVERY_PIXEL_FORMAT := ABGR_8888
 BOARD_RECOVERY_IMAGE_PREPARE += \
     grep -q '^ro.adb.secure.recovery=' $(TARGET_RECOVERY_ROOT_OUT)/prop.default || echo 'ro.adb.secure.recovery=0' >> $(TARGET_RECOVERY_ROOT_OUT)/prop.default; \
     grep -q '^service.adb.root=' $(TARGET_RECOVERY_ROOT_OUT)/prop.default || echo 'service.adb.root=1' >> $(TARGET_RECOVERY_ROOT_OUT)/prop.default;
@@ -51,11 +60,8 @@ VENDOR_SECURITY_PATCH := 2023-02-01
 # Inherit common board flags
 include device/samsung/universal7904-common/BoardConfigCommon.mk
 
-# Keep recovery image headers aligned with the SM-P205 recovery image that the
-# bootloader accepts. The common board config sets generic mkbootimg offsets and
-# the platform build injects Android 13 / current SPL version fields before
-# these args. Match TWRP's deliberately high header version fields so Samsung's
-# rollback gate does not reject Lineage Recovery after TWRP has booted.
+# Keep boot image headers aligned with the SM-P205 images that the bootloader
+# accepts. The prebuilt TWRP recovery is copied as-is by p205_bootimg.mk.
 BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --second_offset 0x00f00000 --set_empty_second_addr --tags_offset 0x00000100 --header_version 1 --board SRPSA16A009RU --os_version 12.0.0 --os_patch_level 2099-12
 BOARD_RECOVERY_MKBOOTIMG_ARGS := $(BOARD_MKBOOTIMG_ARGS)
 
@@ -79,5 +85,9 @@ BOARD_BUILD_DISABLED_VBMETAIMAGE := true
 # VINTF
 DEVICE_MANIFEST_FILE += \
     $(DEVICE_PATH)/configs/android.hardware.keymaster@3.0-service.xml \
-    $(DEVICE_PATH)/configs/camera-provider.xml \
     $(DEVICE_PATH)/configs/radio_manifest.xml
+
+ifeq ($(TARGET_ENABLE_CAMERA_BRINGUP),true)
+DEVICE_MANIFEST_FILE += \
+    $(DEVICE_PATH)/configs/camera-provider.xml
+endif
