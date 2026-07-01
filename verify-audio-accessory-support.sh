@@ -25,15 +25,16 @@ require_grep() {
     grep -qE "$pattern" "$file" || fail "missing pattern '$pattern' in $file"
 }
 
-require_apk_bool_true() {
+require_apk_bool() {
     local apk="$1"
     local name="$2"
+    local expected="$3"
     require_file "$apk"
     local dump
     dump="$("$top/out/host/linux-x86/bin/aapt2" dump resources "$apk" 2>/dev/null)" \
         || fail "could not dump resources from $apk"
-    grep -A1 "bool/$name" <<<"$dump" | grep -q '() true' \
-        || fail "$name is not true in $apk"
+    grep -A1 "bool/$name" <<<"$dump" | grep -q "() $expected" \
+        || fail "$name is not $expected in $apk"
 }
 
 if [[ -z "$target_files_dir" ]]; then
@@ -52,18 +53,19 @@ if [[ ! -f "$kernel_config" ]]; then
 fi
 
 require_file "$overlay_xml"
-require_grep '<bool name="config_useDevInputEventForAudioJack">true</bool>' "$overlay_xml"
-pass "3.5mm jack input-event framework overlay is enabled"
+require_grep '<bool name="config_useDevInputEventForAudioJack">false</bool>' "$overlay_xml"
+pass "3.5mm jack framework overlay uses h2w uevent detection"
 
 framework_rro="$(find "$target_files_dir/VENDOR/overlay" \
     -maxdepth 1 -type f -name 'framework-res*auto_generated_rro_vendor.apk' \
     -print -quit)"
 [[ -n "$framework_rro" ]] || fail "framework-res vendor RRO not found in $target_files_dir/VENDOR/overlay"
 
-require_apk_bool_true \
+require_apk_bool \
     "$framework_rro" \
-    config_useDevInputEventForAudioJack
-pass "target_files vendor framework overlay carries input-event jack support"
+    config_useDevInputEventForAudioJack \
+    false
+pass "target_files vendor framework overlay carries h2w jack detection"
 
 require_file "$target_files_dir/VENDOR/etc/audio_policy_configuration.xml"
 require_file "$target_files_dir/VENDOR/etc/usb_audio_policy_configuration.xml"

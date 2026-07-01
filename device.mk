@@ -9,6 +9,10 @@ LINEAGE_SKIP_CUSTOM_LOCALES := true
 PRODUCT_SHIPPING_API_LEVEL := 28
 PRODUCT_USE_DYNAMIC_PARTITIONS := false
 
+# Avoid .capex decompression through /data/apex while the Android 16 data-label
+# path is still unstable on the 4.4.177 kernel.
+PRODUCT_COMPRESSED_APEX := false
+
 # Release diagnostics. Keep larger log buffers for field debugging, but do not
 # force insecure or always-on ADB in normal Android. Lineage common properties
 # keep ADB authentication enabled for non-eng builds, and users can opt in from
@@ -89,5 +93,6 @@ PRODUCT_PACKAGES += \
     Dialer \
     NavigationBarMode3ButtonOverlay \
     NavigationBarModeGesturalOverlay \
+    TransparentNavigationBarOverlay \
     PhhImsFrameworkOverlay \
     framework_compatibility_matrix.p205_kernel_2.xml
