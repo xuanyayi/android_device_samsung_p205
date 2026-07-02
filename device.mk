@@ -67,6 +67,39 @@ PRODUCT_PACKAGES := $(filter-out \
     vendor.samsung.hardware.radio@2.1-vendorblob, \
     $(PRODUCT_PACKAGES))
 
+# Prefer the maintained samsung_slsi-linaro media/gralloc stack over legacy
+# proprietary OMX/gralloc blobs with the same module names.
+PRODUCT_PACKAGES := $(filter-out \
+    gralloc.exynos7904 \
+    libExynosOMX_Core \
+    libExynosOMX_Resourcemanager \
+    libOMX.Exynos.AVC.Decoder \
+    libOMX.Exynos.AVC.Encoder \
+    libOMX.Exynos.HEVC.Decoder \
+    libOMX.Exynos.HEVC.Encoder \
+    libOMX.Exynos.MPEG4.Decoder \
+    libOMX.Exynos.MPEG4.Encoder \
+    libOMX.Exynos.VP8.Decoder \
+    libOMX.Exynos.VP8.Encoder \
+    libOMX.Exynos.VP9.Decoder \
+    libOMX.Exynos.WMV.Decoder, \
+    $(PRODUCT_PACKAGES))
+
+PRODUCT_PACKAGES += \
+    gralloc.universal7904 \
+    libExynosOMX_Core \
+    libExynosOMX_Resourcemanager \
+    libOMX.Exynos.AVC.Decoder \
+    libOMX.Exynos.AVC.Encoder \
+    libOMX.Exynos.HEVC.Decoder \
+    libOMX.Exynos.HEVC.Encoder \
+    libOMX.Exynos.MPEG4.Decoder \
+    libOMX.Exynos.MPEG4.Encoder \
+    libOMX.Exynos.VP8.Decoder \
+    libOMX.Exynos.VP8.Encoder \
+    libOMX.Exynos.VP9.Decoder \
+    libOMX.Exynos.WMV.Decoder
+
 PRODUCT_VENDOR_PROPERTIES += \
     ro.vendor.multisim.simslotcount=1 \
     ro.vendor.radio.voice_capable=1 \
