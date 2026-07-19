@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The LineageOS Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- S2MU004 does not expose a reliable learned full-charge capacity. -->
+    <bool name="config_show_battery_maximum_capacity">false</bool>
+</resources>
